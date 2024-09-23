@@ -1,0 +1,11 @@
+[Unit]
+Description=regular delete
+Documentation=man:clean
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+ExecStart=/user/local/bin/clear.sh
+
+[Install]
+WantedBy=multi-user.target
