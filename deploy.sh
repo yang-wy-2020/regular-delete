@@ -2,7 +2,7 @@
 
 Choose=$1
 ServiceName="regular-delete.service"
-InstallPath="/usr/loca/bin/"
+InstallPath="/usr/local/bin/"
 
 Usage()
 {
@@ -17,13 +17,13 @@ Usage()
 
 install()
 {
-    if [ ! -f ${InstallPath}/conf/clear.conf ] ;then
+    if [ ! -f ${InstallPath}/clear_conf/clear.conf ] ;then
         sudo cp -r ./regular-delete/conf  ${InstallPath}/clear_conf
-        sudo cp -r  ${InstallPath}/conf/.clear.conf  ${InstallPath}/clear_conf/clear.conf 
+        sudo cp -r  $(pwd)/regular-delete/conf/.clear.conf  ${InstallPath}/clear_conf/clear.conf 
     fi 
     systemctl daemon-reload
     if [[ $(systemctl is-active ${ServiceName}) != "active" ]];then
-        cp ./regular-delete/service/${ServiceName} /lib/systemd/system/
+        sudo cp ./regular-delete/service/${ServiceName} /lib/systemd/system/
         systemctl enable ${ServiceName}
         systemctl restart ${ServiceName}
     else
@@ -34,12 +34,15 @@ install()
 remove()
 {
    systemctl disable ${ServiceName}
-   rm -rf ${InstallPath}/clear_conf 
+   sudo rm -rf ${InstallPath}/clear_conf 
 }
 
 config()
 {
-    sudo vim ${InstallPath}/clear.conf
+    if [ ! -f "${InstallPath}/clear_conf/clear.conf" ];then 
+        echo "please run --install" ; exit -1
+    fi 
+    sudo vim ${InstallPath}/clear_conf/clear.conf
 }
 
 case ${Choose} in
